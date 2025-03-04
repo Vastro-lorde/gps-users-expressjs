@@ -1,6 +1,5 @@
 const { Client } = require("@elastic/elasticsearch");
 
-
 // Elasticsearch Client
 const esClient = new Client({
   node: process.env.ELASTICSEARCH_HOST || "http://localhost:9200",
@@ -8,8 +7,13 @@ const esClient = new Client({
     username: process.env.ELASTICSEARCH_USER || "elastic",
     password: process.env.ELASTICSEARCH_PASS || "changeme",
   },
-  pingTimeout: 30000,
   requestTimeout: 30000,
+  maxRetries: 3,
+  sniffOnStart: true,  // Automatically discovers other nodes on startup
+  sniffInterval: 60000, // Refreshes the node list every 60s
+  tls: {
+    rejectUnauthorized: false, // Allow self-signed SSL if needed
+  },
 });
 
 // Logger Class
